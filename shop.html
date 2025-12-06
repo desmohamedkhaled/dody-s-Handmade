@@ -36,60 +36,82 @@
             </div>
         </div>
 
-        <!-- Filters Panel -->
-        <div class="filters-panel">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-xl);">
-                <!-- Category Filter -->
-                <div class="filter-group">
-                    <div class="filter-title">Category</div>
-                    <div class="filter-options" id="categoryFilters"></div>
+        <!-- Filters Toolbar -->
+        <div class="filters-toolbar">
+            <div class="filters-left">
+                <!-- Category Dropdown -->
+                <div class="filter-dropdown-wrapper">
+                    <button class="filter-dropdown-toggle" onclick="toggleFilterDropdown('categoryDropdown')">
+                        📂 Category <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div id="categoryDropdown" class="filter-dropdown-menu" style="display: none;">
+                        <div id="categoryFilters" style="padding: var(--spacing-md);"></div>
+                    </div>
                 </div>
 
-                <!-- Price Range Filter -->
-                <div class="filter-group">
-                    <div class="filter-title">Price Range</div>
-                    <div class="filter-options">
-                        <input type="range" id="priceMin" min="0" max="5000" value="0" style="width: 100%;">
-                        <input type="range" id="priceMax" min="0" max="5000" value="5000" style="width: 100%;">
-                        <div style="color: var(--color-gray-dark); font-size: var(--font-size-sm); margin-top: var(--spacing-sm);">
-                            <span id="priceDisplay">EGP 0 - EGP 5000</span>
+                <!-- Price Dropdown -->
+                <div class="filter-dropdown-wrapper">
+                    <button class="filter-dropdown-toggle" onclick="toggleFilterDropdown('priceDropdown')">
+                        💰 Price <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div id="priceDropdown" class="filter-dropdown-menu" style="display: none; min-width: 250px;">
+                        <div style="padding: var(--spacing-md);">
+                            <div style="margin-bottom: var(--spacing-md);">
+                                <label style="display: block; font-size: var(--font-size-xs); color: var(--color-gray-medium); margin-bottom: var(--spacing-sm);">Minimum Price</label>
+                                <input type="range" id="priceMin" min="0" max="5000" value="0" style="width: 100%;">
+                            </div>
+                            <div style="margin-bottom: var(--spacing-md);">
+                                <label style="display: block; font-size: var(--font-size-xs); color: var(--color-gray-medium); margin-bottom: var(--spacing-sm);">Maximum Price</label>
+                                <input type="range" id="priceMax" min="0" max="5000" value="5000" style="width: 100%;">
+                            </div>
+                            <div style="background: rgba(168, 213, 186, 0.1); padding: var(--spacing-sm); border-radius: var(--radius-sm); text-align: center;">
+                                <span id="priceDisplay" style="font-weight: 600; color: var(--brand-primary);">EGP 0 - EGP 5000</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Rating Filter -->
-                <div class="filter-group">
-                    <div class="filter-title">Rating</div>
-                    <div class="filter-options">
-                        <label class="filter-checkbox">
-                            <input type="radio" name="rating" value="0" checked> All Ratings
-                        </label>
-                        <label class="filter-checkbox">
-                            <input type="radio" name="rating" value="4"> ★★★★★ 4+
-                        </label>
-                        <label class="filter-checkbox">
-                            <input type="radio" name="rating" value="3"> ★★★★☆ 3+
-                        </label>
+                <!-- Rating Dropdown -->
+                <div class="filter-dropdown-wrapper">
+                    <button class="filter-dropdown-toggle" onclick="toggleFilterDropdown('ratingDropdown')">
+                        ⭐ Rating <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div id="ratingDropdown" class="filter-dropdown-menu" style="display: none;">
+                        <div style="padding: var(--spacing-md);">
+                            <label class="filter-checkbox">
+                                <input type="radio" name="rating" value="0" checked> All Ratings
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="radio" name="rating" value="4"> ★★★★★ 4+
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="radio" name="rating" value="3"> ★★★★☆ 3+
+                            </label>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Sort Options -->
-                <div class="filter-group">
-                    <div class="filter-title">Sort By</div>
-                    <select id="sortSelect" class="sort-select">
-                        <option value="name">Product Name (A-Z)</option>
-                        <option value="price-low">Price: Low to High</option>
-                        <option value="price-high">Price: High to Low</option>
-                        <option value="rating">Highest Rated</option>
-                        <option value="newest">Newest First</option>
-                    </select>
+                <!-- Sort Dropdown -->
+                <div class="filter-dropdown-wrapper">
+                    <button class="filter-dropdown-toggle" onclick="toggleFilterDropdown('sortDropdown')">
+                        🔄 Sort <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div id="sortDropdown" class="filter-dropdown-menu" style="display: none;">
+                        <select id="sortSelect" class="sort-select-dropdown">
+                            <option value="name">Product Name (A-Z)</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="rating">Highest Rated</option>
+                            <option value="newest">Newest First</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <div style="margin-top: var(--spacing-md); display: flex; gap: var(--spacing-md);">
-                <button id="resetFiltersBtn" class="reset-filters-btn">Reset Filters</button>
-                <button id="viewWishlistBtn" class="btn btn-secondary" style="flex: 1;">
-                    ♥ View Wishlist (<span id="wishlistCount">0</span>)
+            <div class="filters-right">
+                <button id="resetFiltersBtn" class="filter-action-btn reset">🔄 Reset</button>
+                <button id="viewWishlistBtn" class="filter-action-btn wishlist">
+                    ♥ Wishlist <span id="wishlistCount" class="badge">0</span>
                 </button>
             </div>
         </div>
@@ -116,6 +138,29 @@
     <script src="js/components/reviews.js"></script>
     <script src="js/components/wishlist.js"></script>
     <script>
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.filter-dropdown-wrapper')) {
+                document.querySelectorAll('.filter-dropdown-menu').forEach(menu => {
+                    menu.style.display = 'none';
+                });
+            }
+        });
+
+        // Toggle filter dropdowns
+        function toggleFilterDropdown(id) {
+            const menu = document.getElementById(id);
+            const isOpen = menu.style.display !== 'none';
+            
+            // Close all other dropdowns
+            document.querySelectorAll('.filter-dropdown-menu').forEach(m => {
+                m.style.display = 'none';
+            });
+            
+            // Toggle current
+            menu.style.display = isOpen ? 'none' : 'block';
+        }
+
         // Initialize search and filter functionality
         let searchFilter = new SearchFilter(PRODUCTS);
 
@@ -286,7 +331,7 @@
         }
 
         function viewWishlist() {
-            alert('Wishlist feature - Coming soon! You have ' + wishlistManager.getWishlistCount() + ' items saved.');
+            window.location.href = 'wishlist.html';
         }
 
         function resetFilters() {
@@ -300,6 +345,11 @@
             searchFilter.resetFilters();
             updatePriceDisplay();
             renderFilteredProducts();
+            
+            // Close all dropdowns
+            document.querySelectorAll('.filter-dropdown-menu').forEach(menu => {
+                menu.style.display = 'none';
+            });
         }
 
         // Initialize
