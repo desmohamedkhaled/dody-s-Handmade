@@ -54,6 +54,13 @@ const CONFIG = {
     maxItems: 100
   },
   
+  // Currency Settings
+  currency: {
+    code: "EGP",
+    symbol: "جنيه",
+    name: "Egyptian Pound"
+  },
+  
   // Breakpoints
   breakpoints: {
     mobile: 480,
