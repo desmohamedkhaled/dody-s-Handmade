@@ -1,0 +1,227 @@
+/* Checkout Page Styles */
+
+.checkout-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-2xl) var(--spacing-md);
+}
+
+.checkout-header {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.checkout-title {
+  font-size: var(--font-size-2xl);
+  color: var(--brand-dark);
+}
+
+.checkout-content {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: var(--spacing-2xl);
+}
+
+/* Form Section */
+.checkout-form {
+  background-color: var(--color-white);
+}
+
+.form-section {
+  margin-bottom: var(--spacing-2xl);
+  padding-bottom: var(--spacing-2xl);
+  border-bottom: 1px solid var(--color-gray-medium);
+}
+
+.form-section:last-child {
+  border-bottom: none;
+}
+
+.form-section-title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--brand-dark);
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+}
+
+.form-row.full {
+  grid-template-columns: 1fr;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--brand-dark);
+}
+
+.input-field {
+  padding: var(--spacing-md);
+  border: 2px solid var(--color-gray-medium);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  transition: all var(--transition-normal);
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(168, 213, 186, 0.1);
+}
+
+.input-field.error {
+  border-color: #DC6464;
+}
+
+.error-message {
+  color: #DC6464;
+  font-size: var(--font-size-xs);
+  margin-top: var(--spacing-xs);
+}
+
+/* Order Summary */
+.order-summary {
+  background-color: var(--color-gray-light);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  height: fit-content;
+  position: sticky;
+  top: 100px;
+}
+
+.summary-title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  margin-bottom: var(--spacing-lg);
+  color: var(--brand-dark);
+}
+
+.summary-items {
+  margin-bottom: var(--spacing-lg);
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--spacing-md) 0;
+  font-size: var(--font-size-sm);
+  border-bottom: 1px solid var(--color-gray-medium);
+}
+
+.summary-item:last-child {
+  border-bottom: none;
+}
+
+.summary-item-code {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-dark);
+  margin-top: 2px;
+}
+
+.summary-item-qty {
+  color: var(--color-gray-dark);
+  font-size: var(--font-size-xs);
+  margin-top: 2px;
+}
+
+.summary-item-total {
+  color: var(--brand-dark);
+  font-weight: 600;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  padding-top: var(--spacing-md);
+  border-top: 2px solid var(--color-gray-medium);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  margin-bottom: var(--spacing-lg);
+}
+
+.summary-total-value {
+  color: var(--brand-primary);
+}
+
+.summary-note {
+  background-color: rgba(168, 213, 186, 0.1);
+  border-left: 4px solid var(--brand-primary);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  color: #4A7C5E;
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Buttons */
+.checkout-buttons {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-direction: column;
+}
+
+.checkout-buttons .btn {
+  width: 100%;
+}
+
+.btn-cancel {
+  background-color: var(--color-gray-light);
+  color: var(--brand-dark);
+  border: 2px solid var(--color-gray-medium);
+}
+
+.btn-cancel:hover {
+  background-color: var(--color-gray-medium);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .checkout-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .order-summary {
+    position: static;
+    order: -1;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .checkout-title {
+    font-size: var(--font-size-xl);
+  }
+  
+  .checkout-buttons {
+    flex-direction: row;
+  }
+  
+  .checkout-buttons .btn {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .checkout-container {
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+  
+  .checkout-buttons {
+    flex-direction: column;
+  }
+  
+  .checkout-buttons .btn {
+    width: 100%;
+  }
+}

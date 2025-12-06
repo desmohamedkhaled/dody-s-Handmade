@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Dody's Handcraft</title>
+  
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/checkout.css">
+</head>
+<body>
+  <!-- Header -->
+  <header></header>
+  
+  <!-- Main Content -->
+  <main>
+    <div class="checkout-container">
+      <div class="checkout-header">
+        <h1 class="checkout-title">Checkout</h1>
+      </div>
+      
+      <div class="checkout-content">
+        <!-- Checkout Form -->
+        <div class="checkout-form">
+          <form id="checkoutForm">
+            <!-- Customer Information -->
+            <div class="form-section">
+              <h2 class="form-section-title">Customer Information</h2>
+              
+              <div class="form-row">
+                <div class="input-group">
+                  <label class="input-label" for="firstName">First Name *</label>
+                  <input type="text" id="firstName" class="input-field" placeholder="John" required>
+                  <span class="error-message" id="firstNameError"></span>
+                </div>
+                <div class="input-group">
+                  <label class="input-label" for="lastName">Last Name *</label>
+                  <input type="text" id="lastName" class="input-field" placeholder="Doe" required>
+                  <span class="error-message" id="lastNameError"></span>
+                </div>
+              </div>
+              
+              <div class="form-row full">
+                <div class="input-group">
+                  <label class="input-label" for="email">Email Address *</label>
+                  <input type="email" id="email" class="input-field" placeholder="john@example.com" required>
+                  <span class="error-message" id="emailError"></span>
+                </div>
+              </div>
+              
+              <div class="form-row full">
+                <div class="input-group">
+                  <label class="input-label" for="phone">Phone Number *</label>
+                  <input type="tel" id="phone" class="input-field" placeholder="+1 (555) 123-4567" required>
+                  <span class="error-message" id="phoneError"></span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Shipping Address -->
+            <div class="form-section">
+              <h2 class="form-section-title">Shipping Address</h2>
+              
+              <div class="form-row full">
+                <div class="input-group">
+                  <label class="input-label" for="address">Street Address *</label>
+                  <input type="text" id="address" class="input-field" placeholder="123 Main Street" required>
+                  <span class="error-message" id="addressError"></span>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="input-group">
+                  <label class="input-label" for="city">City *</label>
+                  <input type="text" id="city" class="input-field" placeholder="New York" required>
+                  <span class="error-message" id="cityError"></span>
+                </div>
+                <div class="input-group">
+                  <label class="input-label" for="state">State/Province *</label>
+                  <input type="text" id="state" class="input-field" placeholder="NY" required>
+                  <span class="error-message" id="stateError"></span>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="input-group">
+                  <label class="input-label" for="zipcode">Zip/Postal Code *</label>
+                  <input type="text" id="zipcode" class="input-field" placeholder="10001" required>
+                  <span class="error-message" id="zipcodeError"></span>
+                </div>
+                <div class="input-group">
+                  <label class="input-label" for="country">Country *</label>
+                  <input type="text" id="country" class="input-field" placeholder="United States" required>
+                  <span class="error-message" id="countryError"></span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Order Notes -->
+            <div class="form-section">
+              <h2 class="form-section-title">Order Notes (Optional)</h2>
+              <div class="form-row full">
+                <div class="input-group">
+                  <label class="input-label" for="notes">Special Instructions</label>
+                  <textarea id="notes" class="input-field" placeholder="Add any special requests or notes..."></textarea>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Buttons -->
+            <div class="checkout-buttons">
+              <button type="submit" class="btn btn-primary" id="submitBtn">Place Order via WhatsApp</button>
+              <a href="cart.html" class="btn btn-cancel">Back to Cart</a>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="order-summary">
+          <h3 class="summary-title">Order Summary</h3>
+          <div class="summary-items" id="summaryItems"></div>
+          <div class="summary-total">
+            <span>Total</span>
+            <span class="summary-total-value" id="orderTotal">$0.00</span>
+          </div>
+          <div class="summary-note">
+            💬 You'll be redirected to WhatsApp to confirm your order after submission.
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Footer -->
+  <footer></footer>
+  
+  <!-- JavaScript Files -->
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components/cart.js"></script>
+  <script src="js/components/products.js"></script>
+  <script src="js/components/header.js"></script>
+  <script src="js/components/footer.js"></script>
+  
+  <script>
+    // WhatsApp Configuration - Use the CONFIG object
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      renderOrderSummary();
+      setupFormSubmit();
+    });
+    
+    function renderOrderSummary() {
+      const cartItems = cart.getCart();
+      const summaryItems = document.getElementById('summaryItems');
+      const orderTotal = document.getElementById('orderTotal');
+      
+      if (cartItems.length === 0) {
+        window.location.href = 'cart.html';
+        return;
+      }
+      
+      const itemsHtml = cartItems.map(item => `
+        <div class="summary-item">
+          <div>
+            <div>${item.name}</div>
+            <div class="summary-item-code">Code: ${item.code}</div>
+            <div class="summary-item-qty">x${item.quantity}</div>
+          </div>
+          <div class="summary-item-total">${formatCurrency(item.price * item.quantity)}</div>
+        </div>
+      `).join('');
+      
+      summaryItems.innerHTML = itemsHtml;
+      orderTotal.textContent = formatCurrency(cart.getTotal());
+    }
+    
+    function setupFormSubmit() {
+      const form = document.getElementById('checkoutForm');
+      
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        if (validateForm()) {
+          submitOrder();
+        }
+      });
+    }
+    
+    function validateForm() {
+      const fields = {
+        firstName: { value: document.getElementById('firstName').value, name: 'First Name' },
+        lastName: { value: document.getElementById('lastName').value, name: 'Last Name' },
+        email: { value: document.getElementById('email').value, name: 'Email' },
+        phone: { value: document.getElementById('phone').value, name: 'Phone' },
+        address: { value: document.getElementById('address').value, name: 'Address' },
+        city: { value: document.getElementById('city').value, name: 'City' },
+        state: { value: document.getElementById('state').value, name: 'State' },
+        zipcode: { value: document.getElementById('zipcode').value, name: 'Zipcode' },
+        country: { value: document.getElementById('country').value, name: 'Country' }
+      };
+      
+      let isValid = true;
+      
+      Object.keys(fields).forEach(key => {
+        const field = fields[key];
+        const input = document.getElementById(key);
+        const error = document.getElementById(`${key}Error`);
+        
+        if (!field.value.trim()) {
+          input.classList.add('error');
+          error.textContent = `${field.name} is required`;
+          isValid = false;
+        } else {
+          input.classList.remove('error');
+          error.textContent = '';
+          
+          // Email validation
+          if (key === 'email' && !isValidEmail(field.value)) {
+            input.classList.add('error');
+            error.textContent = 'Please enter a valid email';
+            isValid = false;
+          }
+          
+          // Phone validation
+          if (key === 'phone' && !isValidPhone(field.value)) {
+            input.classList.add('error');
+            error.textContent = 'Please enter a valid phone number';
+            isValid = false;
+          }
+        }
+      });
+      
+      return isValid;
+    }
+    
+    function submitOrder() {
+      const firstName = document.getElementById('firstName').value;
+      const lastName = document.getElementById('lastName').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const address = document.getElementById('address').value;
+      const city = document.getElementById('city').value;
+      const state = document.getElementById('state').value;
+      const zipcode = document.getElementById('zipcode').value;
+      const country = document.getElementById('country').value;
+      const notes = document.getElementById('notes').value;
+      
+      const cartItems = cart.getCart();
+      const total = cart.getTotal();
+      
+      // Build order details
+      const orderDetails = [
+        `*NEW ORDER FROM DODY'S HANDCRAFT*`,
+        ``,
+        `📋 *Customer Information*`,
+        `Name: ${firstName} ${lastName}`,
+        `Email: ${email}`,
+        `Phone: ${phone}`,
+        ``,
+        `📍 *Shipping Address*`,
+        `${address}`,
+        `${city}, ${state} ${zipcode}`,
+        `${country}`,
+        ``,
+        `🛍️ *Order Details*`,
+        ...cartItems.map(item => `• ${item.name} – Code: ${item.code} (x${item.quantity}) - ${formatCurrency(item.price * item.quantity)}`),
+        ``,
+        `💰 *Total Amount*`,
+        `${formatCurrency(total)}`,
+        ...(notes ? [``, `📝 *Notes*`, notes] : []),
+        ``,
+        `Thank you for shopping with us! 💚`
+      ].join('\n');
+      
+      // Create WhatsApp link
+      const whatsappLink = createWhatsAppLink(CONFIG.whatsapp.phone, orderDetails);
+      
+      // Clear cart and redirect
+      cart.clearCart();
+      new Header().updateCartCount();
+      
+      // Open WhatsApp
+      window.open(whatsappLink, '_blank');
+      
+      // Redirect to home after a short delay
+      setTimeout(() => {
+        showNotification('Order submitted! You will be redirected shortly.', 'success', 4000);
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 2000);
+      }, 500);
+    }
+  </script>
+</body>
+</html>

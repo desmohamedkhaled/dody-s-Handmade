@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dody's Handcraft - Project Index</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #FAFAFA;
+      color: #4A4A4A;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    
+    header {
+      background: linear-gradient(135deg, #A8D5BA 0%, #92C9A3 100%);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+      margin-bottom: 40px;
+      border-radius: 12px;
+    }
+    
+    h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      font-size: 18px;
+      opacity: 0.95;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card h2 {
+      color: #A8D5BA;
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+    
+    .card p {
+      color: #666;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    
+    .btn {
+      display: inline-block;
+      background: #A8D5BA;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.3s;
+      font-weight: 600;
+    }
+    
+    .btn:hover {
+      background: #92C9A3;
+    }
+    
+    .pages {
+      margin-bottom: 40px;
+    }
+    
+    .pages h2 {
+      color: #4A4A4A;
+      margin-bottom: 20px;
+      font-size: 32px;
+    }
+    
+    .page-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+    
+    .page-link {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      text-align: center;
+      border: 2px solid #A8D5BA;
+      transition: all 0.3s;
+    }
+    
+    .page-link:hover {
+      background: #A8D5BA;
+      color: white;
+      transform: scale(1.05);
+    }
+    
+    .page-link-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    
+    .page-link-desc {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+    
+    .docs {
+      margin-top: 40px;
+    }
+    
+    .docs h2 {
+      color: #4A4A4A;
+      margin-bottom: 20px;
+      font-size: 32px;
+    }
+    
+    .doc-list {
+      list-style: none;
+    }
+    
+    .doc-list li {
+      background: white;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border-left: 4px solid #A8D5BA;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .doc-list li strong {
+      color: #4A4A4A;
+    }
+    
+    .doc-list li span {
+      color: #666;
+      font-size: 14px;
+    }
+    
+    .footer-text {
+      text-align: center;
+      color: #666;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #E0E0E0;
+    }
+    
+    .emoji {
+      margin-right: 10px;
+    }
+    
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 32px;
+      }
+      
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎨 Dody's Handcraft</h1>
+      <p class="subtitle">Complete Responsive E-Commerce Website</p>
+    </header>
+    
+    <!-- Website Pages -->
+    <section class="pages">
+      <h2><span class="emoji">📄</span>Website Pages</h2>
+      <div class="page-grid">
+        <a href="index.html" class="page-link">
+          <div class="page-link-title">🏠 Home</div>
+          <div class="page-link-desc">Hero section & featured products</div>
+        </a>
+        <a href="shop.html" class="page-link">
+          <div class="page-link-title">🛍️ Shop</div>
+          <div class="page-link-desc">Browse all products</div>
+        </a>
+        <a href="cart.html" class="page-link">
+          <div class="page-link-title">🛒 Cart</div>
+          <div class="page-link-desc">Manage your cart</div>
+        </a>
+        <a href="checkout.html" class="page-link">
+          <div class="page-link-title">💳 Checkout</div>
+          <div class="page-link-desc">Complete your order</div>
+        </a>
+      </div>
+    </section>
+    
+    <!-- Features -->
+    <section class="grid">
+      <div class="card">
+        <h2>✨ Features</h2>
+        <p>
+          ✓ Responsive design<br>
+          ✓ Shopping cart<br>
+          ✓ WhatsApp integration<br>
+          ✓ Form validation<br>
+          ✓ Elegant UI<br>
+          ✓ No dependencies
+        </p>
+      </div>
+      
+      <div class="card">
+        <h2>🎨 Design</h2>
+        <p>
+          ✓ Brand colors (Mint Green)<br>
+          ✓ Flat design (no gradients)<br>
+          ✓ Minimal aesthetic<br>
+          ✓ Smooth animations<br>
+          ✓ Mobile-first<br>
+          ✓ Accessible
+        </p>
+      </div>
+      
+      <div class="card">
+        <h2>🛠️ Tech Stack</h2>
+        <p>
+          ✓ Pure HTML5<br>
+          ✓ CSS3<br>
+          ✓ Vanilla JavaScript<br>
+          ✓ LocalStorage<br>
+          ✓ No frameworks<br>
+          ✓ Lightweight
+        </p>
+      </div>
+    </section>
+    
+    <!-- Documentation -->
+    <section class="docs">
+      <h2><span class="emoji">📚</span>Documentation</h2>
+      <ul class="doc-list">
+        <li>
+          <strong>📖 README.md</strong>
+          <span>Complete project documentation & setup</span>
+        </li>
+        <li>
+          <strong>🚀 QUICKSTART.md</strong>
+          <span>3-step getting started guide</span>
+        </li>
+        <li>
+          <strong>🔧 IMPLEMENTATION.md</strong>
+          <span>Developer guide & customization</span>
+        </li>
+        <li>
+          <strong>🎨 DESIGN_GUIDE.md</strong>
+          <span>Design system & branding guidelines</span>
+        </li>
+        <li>
+          <strong>📦 PROJECT_SUMMARY.md</strong>
+          <span>Complete project overview</span>
+        </li>
+      </ul>
+    </section>
+    
+    <!-- Quick Stats -->
+    <section class="grid" style="margin-top: 40px;">
+      <div class="card" style="text-align: center;">
+        <h2 style="font-size: 32px; color: #A8D5BA;">4</h2>
+        <p><strong>Complete Pages</strong></p>
+      </div>
+      
+      <div class="card" style="text-align: center;">
+        <h2 style="font-size: 32px; color: #A8D5BA;">8</h2>
+        <p><strong>Sample Products</strong></p>
+      </div>
+      
+      <div class="card" style="text-align: center;">
+        <h2 style="font-size: 32px; color: #A8D5BA;">27</h2>
+        <p><strong>Code Files</strong></p>
+      </div>
+      
+      <div class="card" style="text-align: center;">
+        <h2 style="font-size: 32px; color: #A8D5BA;">100%</h2>
+        <p><strong>Responsive</strong></p>
+      </div>
+    </section>
+    
+    <!-- Getting Started -->
+    <section style="margin-top: 40px;">
+      <div class="card" style="background: #F5E6E0; border-left: 4px solid #A8D5BA;">
+        <h2 style="color: #4A4A4A;">🚀 Getting Started</h2>
+        <p><strong>Step 1:</strong> Click the page links above to explore</p>
+        <p><strong>Step 2:</strong> Run <code>server.bat</code> (Windows) or <code>./server.sh</code> (Mac/Linux)</p>
+        <p><strong>Step 3:</strong> Open <code>http://localhost:8000</code> in browser</p>
+        <p style="margin-top: 15px;">
+          <a href="index.html" class="btn">Go to Website →</a>
+        </p>
+      </div>
+    </section>
+    
+    <div class="footer-text">
+      <p>💚 <strong>Dody's Handcraft Website</strong> - Elegant, Minimal, Responsive</p>
+      <p style="font-size: 12px; margin-top: 10px;">Built with HTML, CSS & JavaScript • No dependencies • Production ready</p>
+    </div>
+  </div>
+</body>
+</html>
