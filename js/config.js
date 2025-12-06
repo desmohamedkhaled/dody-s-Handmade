@@ -20,7 +20,7 @@ const CONFIG = {
   
   // WhatsApp Configuration
   whatsapp: {
-    phone: "+201234567890", // Replace with your actual WhatsApp business number (include country code)
+    phone: "+201010675436", // Replace with your actual WhatsApp business number (include country code)
     businessName: "Dody's Handcraft"
   },
   
