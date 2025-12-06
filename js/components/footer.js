@@ -33,9 +33,9 @@ class Footer {
           
           <div class="footer-section">
             <h3 class="footer-section-title">Quick Links</h3>
-            <a href="/" class="footer-link">Home</a>
-            <a href="/shop" class="footer-link">Shop</a>
-            <a href="/cart" class="footer-link">Cart</a>
+            <a href="index.html" class="footer-link">Home</a>
+            <a href="shop.html" class="footer-link">Shop</a>
+            <a href="cart.html" class="footer-link">Cart</a>
             <a href="#faq" class="footer-link">FAQ</a>
           </div>
           

@@ -96,6 +96,9 @@
   <script src="js/components/footer.js"></script>
   
   <script>
+    // Initialize cart
+    const cart = new CartManager();
+    
     document.addEventListener('DOMContentLoaded', () => {
       // Load featured products
       const featured = PRODUCTS.slice(0, 4);

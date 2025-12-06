@@ -21,14 +21,14 @@ class Header {
     
     header.innerHTML = `
       <div class="header-container">
-        <a href="/" class="logo">
+        <a href="index.html" class="logo">
           <img src="assets/images/logo.jpg" alt="Dody's Handcraft" class="logo-image">
         </a>
         
         <nav class="nav">
-          <li><a href="/" class="nav-link" data-page="home">Home</a></li>
-          <li><a href="/shop" class="nav-link" data-page="shop">Shop</a></li>
-          <li><a href="/cart" class="nav-link" data-page="cart">Cart</a></li>
+          <li><a href="index.html" class="nav-link" data-page="home">Home</a></li>
+          <li><a href="shop.html" class="nav-link" data-page="shop">Shop</a></li>
+          <li><a href="cart.html" class="nav-link" data-page="cart">Cart</a></li>
         </nav>
         
         <div class="flex-center gap-2">
@@ -45,9 +45,9 @@ class Header {
         
         <div class="mobile-menu" id="mobileMenu">
           <nav class="nav" style="flex-direction: column;">
-            <li><a href="/" class="nav-link" data-page="home">Home</a></li>
-            <li><a href="/shop" class="nav-link" data-page="shop">Shop</a></li>
-            <li><a href="/cart" class="nav-link" data-page="cart">Cart</a></li>
+            <li><a href="index.html" class="nav-link" data-page="home">Home</a></li>
+            <li><a href="shop.html" class="nav-link" data-page="shop">Shop</a></li>
+            <li><a href="cart.html" class="nav-link" data-page="cart">Cart</a></li>
           </nav>
         </div>
       </div>
@@ -71,7 +71,7 @@ class Header {
     
     if (cartIcon) {
       cartIcon.addEventListener('click', () => {
-        window.location.href = '/cart';
+        window.location.href = 'cart.html';
       });
     }
     
@@ -106,8 +106,8 @@ class Header {
   }
   
   updateCartCount() {
-    const cart = Storage.get('cart') || [];
-    this.cartCount = cart.length;
+    const cartItems = Storage.get('cart') || [];
+    this.cartCount = cartItems.reduce((count, item) => count + item.quantity, 0);
     
     const badge = document.getElementById('cartBadge');
     if (badge) {
