@@ -359,3 +359,211 @@
     </script>
 </body>
 </html>
+
+    <script src="js/components/products.js"></script>
+    <script src="js/components/header.js"></script>
+    <script src="js/components/footer.js"></script>
+    <script>
+        // Mock data for shop products
+        const mockProducts = [
+            {
+                id: 1,
+                code: "RA001",
+                name: "Resin Ashtray",
+                price: "EGP 18.00",
+                image: "assets/images/Resin Ashtray.jpg",
+                description: "Handmade resin ashtray with unique designs."
+            },
+            {
+                id: 2,
+                code: "RV002",
+                name: "Resin Vase",
+                price: "EGP 30.00",
+                image: "assets/images/Resin Vase.jpg",
+                description: "Elegant resin vase for home decor."
+            },
+            {
+                id: 3,
+                code: "HR003",
+                name: "Home Decor Resin Piece",
+                price: "EGP 22.00",
+                image: "assets/images/Home Decor Resin Piece.jpg",
+                description: "Artistic resin piece for home decoration."
+            },
+            {
+                id: 4,
+                code: "ND004",
+                name: "Name Desk Stand",
+                price: "EGP 20.00",
+                image: "assets/images/Name Desk Stand.jpg",
+                description: "Personalized resin name desk stand."
+            },
+            {
+                id: 5,
+                code: "RT005",
+                name: "Resin Tray",
+                price: "EGP 28.00",
+                image: "assets/images/Resin Tray.jpg",
+                description: "Handcrafted resin tray for serving or decor."
+            },
+            {
+                id: 6,
+                code: "RK006",
+                name: "Resin Keychain",
+                price: "EGP 8.00",
+                image: "assets/images/Resin Keychain.jpg",
+                description: "Colorful resin keychain with charm."
+            },
+            {
+                id: 7,
+                code: "HC007",
+                name: "Hair Clip (Resin Clip)",
+                price: "EGP 6.00",
+                image: "assets/images/Hair Clip (Resin Clip).jpg",
+                description: "Trendy resin hair clip for all styles."
+            },
+            {
+                id: 8,
+                code: "WC008",
+                name: "Wall Clock",
+                price: "EGP 35.00",
+                image: "assets/images/Wall Clock.jpg",
+                description: "Decorative wall clock with resin art."
+            },
+            {
+                id: 9,
+                code: "NB009",
+                name: "Notebook",
+                price: "EGP 10.00",
+                image: "assets/images/Notebook.jpg",
+                description: "Handmade notebook with resin cover."
+            },
+            {
+                id: 10,
+                code: "RD010",
+                name: "Ramadan Decoration Item",
+                price: "EGP 15.00",
+                image: "assets/images/Ramadan Decoration Item.jpg",
+                description: "Special resin decor for Ramadan."
+            },
+            {
+                id: 11,
+                code: "CD011",
+                name: "Concrete Handmade Décor",
+                price: "EGP 25.00",
+                image: "assets/images/Concrete Handmade Décor.jpg",
+                description: "Modern concrete handmade décor piece."
+            },
+            {
+                id: 12,
+                code: "CC012",
+                name: "Concrete Candle Shape",
+                price: "EGP 14.00",
+                image: "assets/images/Concrete Candle Shape.jpg",
+                description: "Concrete candle holder in unique shapes."
+            },
+            {
+                id: 13,
+                code: "RC013",
+                name: "Resin Candle",
+                price: "EGP 16.00",
+                image: "assets/images/Resin Candle.jpg",
+                description: "Hand-poured resin candle with fragrance."
+            }
+        ];
+
+        // Render products to the shop page with modern design
+        function renderProducts(products) {
+            const list = document.getElementById('product-list');
+            list.innerHTML = products.map(product => `
+                <div class="card" style="border-radius: 20px; overflow: hidden;">
+                    <img src="${product.image}" alt="${product.name}" class="card-image" />
+                    <div class="card-content">
+                        <h2 class="card-title">${product.name}</h2>
+                        <div class="card-code">${product.code}</div>
+                        <p class="card-description">${product.description}</p>
+                        <div class="card-footer">
+                            <span class="card-price">${product.price}</span>
+                            <div class="card-actions">
+                                <button class="btn btn-primary buy-now" data-name="${product.name}" data-code="${product.code}">Buy Now</button>
+                                <button class="btn btn-secondary add-to-cart" data-name="${product.name}" data-code="${product.code}">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add hover effects
+            Array.from(document.querySelectorAll('.card')).forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.boxShadow = 'var(--shadow-lg)';
+                    card.style.transform = 'translateY(-4px)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.boxShadow = 'var(--shadow-md)';
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+        }
+
+        // WhatsApp redirect for Buy Now button only
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('buy-now')) {
+                const name = e.target.getAttribute('data-name');
+                const code = e.target.getAttribute('data-code');
+                const message = encodeURIComponent(`Hello, I want to order: ${name} – Code: ${code}`);
+                window.open(`https://wa.me/201010675436?text=${message}`, '_blank');
+            }
+            if (e.target.classList.contains('add-to-cart')) {
+                const name = e.target.getAttribute('data-name');
+                const code = e.target.getAttribute('data-code');
+                addToCart({ name, code });
+                e.preventDefault();
+            }
+        });
+
+        // Cart logic with localStorage
+        let cart = JSON.parse(localStorage.getItem('dodyCart')) || [];
+        
+        function saveCart() {
+            localStorage.setItem('dodyCart', JSON.stringify(cart));
+        }
+        
+        function addToCart(product) {
+            cart.push(product);
+            saveCart();
+            
+            // Update header cart count
+            if (window.Header) {
+                const header = new Header();
+                header.updateCartCount();
+            } else {
+                const badge = document.getElementById('cartBadge');
+                if (badge) badge.textContent = cart.length;
+            }
+            
+            // Show success message and stay on page
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = '✓ Added!';
+            button.style.background = 'var(--brand-primary)';
+            
+            setTimeout(() => {
+                button.textContent = 'Add to Cart';
+                button.style.background = '';
+            }, 1500);
+        }
+        
+        // Update cart count function
+        function updateCartCount() {
+            const cartCount = document.querySelector('[data-cart-count]');
+            if (cartCount) {
+                cartCount.textContent = cart.length;
+            }
+        }
+
+        renderProducts(mockProducts);
+        updateCartCount();
+    </script>
+</body>
+</html>
