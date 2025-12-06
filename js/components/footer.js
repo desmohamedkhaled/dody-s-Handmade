@@ -25,9 +25,7 @@ class Footer {
               Every piece tells a story of creativity and dedication.
             </p>
             <div class="social-links">
-              <a href="https://instagram.com" target="_blank" rel="noopener" class="social-icon" title="Instagram">📷</a>
-              <a href="https://facebook.com" target="_blank" rel="noopener" class="social-icon" title="Facebook">f</a>
-              <a href="https://pinterest.com" target="_blank" rel="noopener" class="social-icon" title="Pinterest">📌</a>
+              <a href="https://www.instagram.com/dody_s_handcraft?igsh=MWpieW8xMHo3YW9jeg==&utm_source=ig_contact_invite" target="_blank" rel="noopener" class="social-icon" title="Instagram">📷</a>
             </div>
           </div>
           
@@ -42,11 +40,9 @@ class Footer {
           <div class="footer-section">
             <h3 class="footer-section-title">Contact Us</h3>
             <p class="footer-section-text">
-              📧 info@dodyshandcraft.com<br>
-              📱 +1 (555) 123-4567<br>
-              📍 123 Craft Street, Handmade City, HC 12345
+              📱 +20 101 067 5436<br>
             </p>
-            <a href="https://wa.me/15551234567" target="_blank" rel="noopener" class="footer-link">
+            <a href="https://wa.me/+201010675436" target="_blank" rel="noopener" class="footer-link">
               💬 Chat on WhatsApp
             </a>
           </div>

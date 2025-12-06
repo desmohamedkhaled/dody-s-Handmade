@@ -36,7 +36,7 @@ const CONFIG = {
     instagram: "https://instagram.com",
     facebook: "https://facebook.com",
     pinterest: "https://pinterest.com",
-    whatsapp: "https://wa.me/15551234567"
+    whatsapp: "https://wa.me/+201010675436"
   },
   
   // Site Settings

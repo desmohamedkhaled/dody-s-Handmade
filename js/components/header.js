@@ -106,8 +106,9 @@ class Header {
   }
   
   updateCartCount() {
-    const cartItems = Storage.get('cart') || [];
-    this.cartCount = cartItems.reduce((count, item) => count + item.quantity, 0);
+    // Get cart from new localStorage format (dodyCart)
+    const cartItems = JSON.parse(localStorage.getItem('dodyCart')) || [];
+    this.cartCount = cartItems.length;
     
     const badge = document.getElementById('cartBadge');
     if (badge) {

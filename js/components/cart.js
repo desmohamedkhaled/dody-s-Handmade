@@ -5,7 +5,7 @@
 class CartManager {
   constructor() {
     this.cart = Storage.get('cart') || [];
-    this.products = Storage.get('products') || [];
+    this.products = (typeof PRODUCTS !== 'undefined' ? PRODUCTS : null) || Storage.get('products') || [];
   }
   
   addToCart(productId, quantity = 1) {
@@ -14,7 +14,8 @@ class CartManager {
     if (existingItem) {
       existingItem.quantity += quantity;
     } else {
-      const product = this.products.find(p => p.id === productId);
+      // Try to find product from PRODUCTS first, then from this.products
+      const product = (typeof PRODUCTS !== 'undefined' ? PRODUCTS.find(p => p.id === productId) : null) || this.products.find(p => p.id === productId);
       if (product) {
         this.cart.push({
           id: productId,
@@ -106,5 +107,16 @@ class CartManager {
   }
 }
 
-// Global cart instance
-const cart = new CartManager();
+// Global cart instance - initialized after products load
+let cart = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (!cart) {
+    cart = new CartManager();
+  }
+});
+
+// Fallback initialization
+if (!cart && typeof PRODUCTS !== 'undefined') {
+  cart = new CartManager();
+}

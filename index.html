@@ -100,9 +100,14 @@
     const cart = new CartManager();
     
     document.addEventListener('DOMContentLoaded', () => {
-      // Load featured products
-      const featured = PRODUCTS.slice(0, 4);
-      ProductCard.renderGrid(featured, '#featuredProducts');
+      // Small delay to ensure all scripts are loaded
+      setTimeout(() => {
+        // Load featured products
+        if (PRODUCTS && PRODUCTS.length > 0) {
+          const featured = PRODUCTS.slice(0, 4);
+          ProductCard.renderGrid(featured, '#featuredProducts');
+        }
+      }, 100);
     });
   </script>
 </body>

@@ -52,85 +52,86 @@
   <script src="js/components/footer.js"></script>
   
   <script>
-    // Initialize cart
-    const cart = new CartManager();
+    // Load cart from localStorage
+    let cartItems = JSON.parse(localStorage.getItem('dodyCart')) || [];
+    
+    function saveCart() {
+      localStorage.setItem('dodyCart', JSON.stringify(cartItems));
+    }
+    
+    function renderCart() {
+      const cartContent = document.getElementById('cartContent');
+      const emptyCart = document.getElementById('emptyCart');
+      
+      if (cartItems.length === 0) {
+        cartContent.style.display = 'none';
+        emptyCart.style.display = 'block';
+        return;
+      }
+      
+      cartContent.style.display = 'block';
+      emptyCart.style.display = 'none';
+      
+      const itemsHtml = cartItems.map((item, index) => `
+        <div class="cart-item" style="display: flex; gap: var(--spacing-lg); padding: var(--spacing-lg); border: 1px solid var(--color-gray-medium); border-radius: 12px; margin-bottom: var(--spacing-lg);">
+          <img src="assets/images/${item.name}.jpg" alt="${item.name}" class="cart-item-image" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
+          <div class="cart-item-details" style="flex: 1;">
+            <h3 style="font-size: var(--font-size-lg); font-weight: 600; margin-bottom: var(--spacing-sm);">${item.name}</h3>
+            <p style="color: var(--color-gray-dark); margin-bottom: var(--spacing-sm);">Code: <strong>${item.code}</strong></p>
+            <p style="color: var(--brand-primary); font-weight: 600; font-size: var(--font-size-lg);">${item.price}</p>
+            <button class="btn btn-secondary" style="margin-top: var(--spacing-md); padding: var(--spacing-sm) var(--spacing-md); font-size: var(--font-size-sm);" onclick="removeFromCart(${index})">Remove from Cart</button>
+          </div>
+        </div>
+      `).join('');
+      
+      const total = cartItems.length;
+      const summaryHtml = `
+        <div style="background: var(--color-gray-light); padding: var(--spacing-lg); border-radius: 12px; margin-top: var(--spacing-2xl);">
+          <h3 style="font-size: var(--font-size-lg); font-weight: 700; margin-bottom: var(--spacing-lg);">Order Summary</h3>
+          <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-md);">
+            <span>Total Items</span>
+            <span style="font-weight: 600;">${total}</span>
+          </div>
+          <div style="border-top: 1px solid var(--color-gray-medium); padding-top: var(--spacing-lg); margin-top: var(--spacing-lg);">
+            <button class="btn btn-primary" style="width: 100%; padding: var(--spacing-md) var(--spacing-lg); margin-bottom: var(--spacing-md); font-size: var(--font-size-base);" onclick="checkoutToWhatsApp()">Checkout via WhatsApp</button>
+            <a href="shop.html" class="btn btn-secondary" style="width: 100%; padding: var(--spacing-md) var(--spacing-lg); display: block; text-align: center; text-decoration: none;">Continue Shopping</a>
+          </div>
+        </div>
+      `;
+      
+      cartContent.innerHTML = itemsHtml + summaryHtml;
+    }
+    
+    function removeFromCart(index) {
+      cartItems.splice(index, 1);
+      saveCart();
+      renderCart();
+      
+      // Update header cart count
+      if (window.Header) {
+        const header = new Header();
+        header.updateCartCount();
+      }
+    }
+    
+    function checkoutToWhatsApp() {
+      if (cartItems.length === 0) {
+        alert('Your cart is empty!');
+        return;
+      }
+      
+      const items = cartItems.map(p => `${p.name} – Code: ${p.code}`).join('\n');
+      const message = encodeURIComponent(`Hello, I want to order:\n${items}`);
+      window.open(`https://wa.me/201010675436?text=${message}`, '_blank');
+      
+      // Clear cart after checkout
+      cartItems = [];
+      localStorage.removeItem('dodyCart');
+      renderCart();
+    }
     
     document.addEventListener('DOMContentLoaded', () => {
       renderCart();
-      
-      window.updateQuantity = function(productId, quantity) {
-        const qty = parseInt(quantity);
-        if (qty < 1) {
-          cart.removeFromCart(productId);
-        } else {
-          cart.updateQuantity(productId, qty);
-        }
-        renderCart();
-      };
-      
-      window.removeItem = function(productId) {
-        cart.removeFromCart(productId);
-        renderCart();
-        new Header().updateCartCount();
-        showNotification('Item removed from cart', 'success');
-      };
-      
-      function renderCart() {
-        const cartItems = cart.getCart();
-        const cartContent = document.getElementById('cartContent');
-        const emptyCart = document.getElementById('emptyCart');
-        
-        if (cartItems.length === 0) {
-          cartContent.style.display = 'none';
-          emptyCart.style.display = 'block';
-          return;
-        }
-        
-        cartContent.style.display = 'grid';
-        emptyCart.style.display = 'none';
-        
-        const itemsHtml = cartItems.map(item => `
-          <div class="cart-items">
-            <div class="cart-item">
-              <img src="${item.image}" alt="${item.name}" class="cart-item-image" onerror="this.src='https://via.placeholder.com/100?text=${encodeURIComponent(item.name)}'">
-              <div class="cart-item-details">
-                <h3 class="cart-item-name">${item.name}</h3>
-                <p class="cart-item-code">Code: ${item.code}</p>
-                <p class="cart-item-price">${formatCurrency(item.price)} each</p>
-                <div class="cart-item-controls">
-                  <input type="number" min="1" value="${item.quantity}" class="quantity-input" onchange="updateQuantity(${item.id}, this.value)">
-                  <button class="remove-button" onclick="removeItem(${item.id})">Remove</button>
-                </div>
-              </div>
-            </div>
-        `).join('');
-        
-        const total = cart.getTotal();
-        const summaryHtml = `
-          <div class="cart-summary">
-            <h3 class="summary-title">Order Summary</h3>
-            <div class="summary-row">
-              <span>Subtotal</span>
-              <span>${formatCurrency(total)}</span>
-            </div>
-            <div class="summary-row">
-              <span>Shipping</span>
-              <span>Calculated at checkout</span>
-            </div>
-            <div class="summary-row total">
-              <span>Total</span>
-              <span class="summary-total-value">${formatCurrency(total)}</span>
-            </div>
-            <div class="summary-buttons">
-              <a href="checkout.html" class="btn btn-primary">Proceed to Checkout</a>
-              <a href="shop.html" class="btn btn-secondary">Continue Shopping</a>
-            </div>
-          </div>
-          </div>
-        `;
-        
-        cartContent.innerHTML = itemsHtml + summaryHtml;
-      }
     });
   </script>
 </body>
