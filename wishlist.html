@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist - dody_s Handmade</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/features.css">
+</head>
+<body>
+    <!-- Header -->
+    <header></header>
+
+    <div class="wishlist-container">
+        <section class="shop-header" style="text-align: center; margin-bottom: var(--spacing-2xl); padding: var(--spacing-2xl) var(--spacing-md);">
+            <h1 class="shop-title" style="font-size: var(--font-size-3xl); font-weight: 700; color: var(--brand-dark); margin-bottom: var(--spacing-md);">My Wishlist</h1>
+            <p style="color: var(--color-gray-dark); font-size: var(--font-size-base); margin-top: var(--spacing-md);">Save your favorite items for later</p>
+        </section>
+
+        <!-- Wishlist Statistics -->
+        <div id="wishlistStats" class="wishlist-stats" style="display: none;">
+            <div class="stat-item">
+                <div class="stat-value" id="statItems">0</div>
+                <div class="stat-label">Total Items</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="statValue">EGP 0</div>
+                <div class="stat-label">Est. Value</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="statCategories">0</div>
+                <div class="stat-label">Categories</div>
+            </div>
+        </div>
+
+        <!-- Sort Options -->
+        <div class="sort-container" id="sortContainer" style="display: none;">
+            <span class="sort-label">Sort by:</span>
+            <select id="wishlistSort" class="sort-select">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+            </select>
+        </div>
+
+        <!-- Wishlist Grid -->
+        <div id="wishlistGrid" class="wishlist-grid"></div>
+
+        <!-- Empty Wishlist Message -->
+        <div id="emptyWishlist" class="wishlist-empty">
+            <div class="wishlist-empty-icon">♡</div>
+            <h2>Your wishlist is empty</h2>
+            <p>Start adding your favorite products to save them for later!</p>
+            <a href="shop.html" class="btn btn-primary" style="margin-top: var(--spacing-md);">Continue Shopping</a>
+        </div>
+
+        <!-- Actions -->
+        <div id="wishlistActions" style="display: none; margin-top: var(--spacing-2xl); display: flex; gap: var(--spacing-md); flex-wrap: wrap;">
+            <button id="clearWishlistBtn" class="btn btn-outline">Clear Wishlist</button>
+            <button id="addAllToCartBtn" class="btn btn-primary">Add All to Cart</button>
+            <a href="shop.html" class="btn btn-secondary">Continue Shopping</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer></footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/components/products.js"></script>
+    <script src="js/components/header.js"></script>
+    <script src="js/components/footer.js"></script>
+    <script src="js/components/reviews.js"></script>
+    <script src="js/components/wishlist.js"></script>
+    <script>
+        function renderWishlist() {
+            const wishlist = wishlistManager.getSortedWishlist(
+                document.getElementById('wishlistSort').value || 'newest'
+            );
+
+            const grid = document.getElementById('wishlistGrid');
+            const empty = document.getElementById('emptyWishlist');
+            const stats = document.getElementById('wishlistStats');
+            const actions = document.getElementById('wishlistActions');
+            const sortContainer = document.getElementById('sortContainer');
+
+            if (wishlist.length === 0) {
+                grid.innerHTML = '';
+                empty.style.display = 'block';
+                stats.style.display = 'none';
+                actions.style.display = 'none';
+                sortContainer.style.display = 'none';
+                return;
+            }
+
+            // Show elements
+            empty.style.display = 'none';
+            stats.style.display = 'grid';
+            actions.style.display = 'flex';
+            sortContainer.style.display = 'flex';
+
+            // Render wishlist items
+            grid.innerHTML = wishlist.map(item => {
+                const product = PRODUCTS.find(p => p.id === item.id);
+                const rating = product ? product.averageRating : 0;
+                
+                return `
+                    <div class="card" style="border-radius: 20px; overflow: hidden; position: relative;">
+                        <img src="${item.image}" alt="${item.name}" class="card-image" />
+                        <button class="wishlist-btn in-wishlist" onclick="removeFromWishlist(${item.id})" 
+                                style="position: absolute; top: 10px; right: 10px; z-index: 10;">♥</button>
+                        <div class="card-content">
+                            <h2 class="card-title">${item.name}</h2>
+                            <div class="card-code">${item.code}</div>
+                            ${product ? `<div class="rating-container">
+                                <div>${reviewsManager.generateStarRating(rating, 'sm')}</div>
+                                <span class="rating-text">${rating}</span>
+                            </div>` : ''}
+                            <div class="card-footer">
+                                <span class="card-price">${item.price}</span>
+                                <div class="card-actions">
+                                    <button class="btn btn-primary btn-small" onclick="buyNowFromWishlist(${item.id})">Buy Now</button>
+                                    <button class="btn btn-secondary btn-small" onclick="addToCartFromWishlist(${item.id})">Add to Cart</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Update statistics
+            const stats_data = wishlistManager.getStatistics();
+            document.getElementById('statItems').textContent = stats_data.totalItems;
+            document.getElementById('statValue').textContent = `EGP ${stats_data.estimatedValue}`;
+            document.getElementById('statCategories').textContent = Object.keys(stats_data.categories).length;
+        }
+
+        function removeFromWishlist(productId) {
+            wishlistManager.removeFromWishlist(productId);
+            renderWishlist();
+        }
+
+        function buyNowFromWishlist(productId) {
+            const item = wishlistManager.wishlistItems.find(w => w.id === productId);
+            if (item) {
+                const message = encodeURIComponent(`Hello, I want to order: ${item.name} – Code: ${item.code}`);
+                window.open(`https://wa.me/201010675436?text=${message}`, '_blank');
+            }
+        }
+
+        function addToCartFromWishlist(productId) {
+            const item = wishlistManager.moveToCart(productId);
+            if (item) {
+                renderWishlist();
+            }
+        }
+
+        document.getElementById('wishlistSort').addEventListener('change', renderWishlist);
+
+        document.getElementById('clearWishlistBtn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear your entire wishlist?')) {
+                wishlistManager.clearWishlist();
+                renderWishlist();
+            }
+        });
+
+        document.getElementById('addAllToCartBtn').addEventListener('click', () => {
+            const items = wishlistManager.getWishlist();
+            items.forEach(item => {
+                // Add to cart logic here
+                wishlistManager.removeFromWishlist(item.id);
+            });
+            alert(`${items.length} items added to cart!`);
+            renderWishlist();
+        });
+
+        // Initial render
+        renderWishlist();
+    </script>
+</body>
+</html>

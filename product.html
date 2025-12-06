@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - dody_s Handmade</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/features.css">
+    <style>
+        .product-detail-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-2xl);
+        }
+
+        .product-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-2xl);
+            margin-bottom: var(--spacing-3xl);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: var(--radius-lg);
+        }
+
+        .product-info h1 {
+            font-size: var(--font-size-3xl);
+            color: var(--brand-dark);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .product-code {
+            font-size: var(--font-size-sm);
+            color: var(--color-gray-medium);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .product-rating {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .product-price {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--brand-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .product-description {
+            color: var(--color-gray-dark);
+            line-height: 1.6;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .product-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .product-actions button {
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            .product-detail-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-xl);
+            }
+
+            .product-info h1 {
+                font-size: var(--font-size-2xl);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header></header>
+
+    <div class="product-detail-container">
+        <div id="productDetail"></div>
+
+        <!-- Reviews Section -->
+        <div class="reviews-section">
+            <div class="reviews-header">
+                <h2 class="reviews-title">Customer Reviews</h2>
+                <button class="add-review-btn" onclick="toggleReviewForm()">Add Review</button>
+            </div>
+
+            <!-- Review Form -->
+            <div id="reviewForm" class="review-form" style="display: none;">
+                <div class="form-group">
+                    <label class="form-label">Your Name</label>
+                    <input type="text" id="reviewName" class="form-input" placeholder="Enter your name" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Rating</label>
+                    <div class="rating-selector">
+                        <span class="star-selector" onclick="setRating(1)">★</span>
+                        <span class="star-selector" onclick="setRating(2)">★</span>
+                        <span class="star-selector" onclick="setRating(3)">★</span>
+                        <span class="star-selector" onclick="setRating(4)">★</span>
+                        <span class="star-selector" onclick="setRating(5)">★</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Review Title</label>
+                    <input type="text" id="reviewTitle" class="form-input" placeholder="Summarize your review" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Your Review</label>
+                    <textarea id="reviewComment" class="form-textarea" placeholder="Share your experience with this product..."></textarea>
+                </div>
+
+                <button class="submit-review-btn" onclick="submitReview()">Submit Review</button>
+            </div>
+
+            <!-- Reviews List -->
+            <div id="reviewsList"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer></footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/components/products.js"></script>
+    <script src="js/components/header.js"></script>
+    <script src="js/components/footer.js"></script>
+    <script src="js/components/reviews.js"></script>
+    <script src="js/components/wishlist.js"></script>
+    <script>
+        let currentProductId = null;
+        let currentRating = 0;
+
+        function getProductIdFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return parseInt(params.get('id')) || null;
+        }
+
+        function renderProductDetail() {
+            currentProductId = getProductIdFromURL();
+            if (!currentProductId) {
+                document.getElementById('productDetail').innerHTML = `
+                    <div style="text-align: center; padding: var(--spacing-3xl);">
+                        <p>Product not found. <a href="shop.html">Back to shop</a></p>
+                    </div>
+                `;
+                return;
+            }
+
+            const product = PRODUCTS.find(p => p.id === currentProductId);
+            if (!product) {
+                document.getElementById('productDetail').innerHTML = `
+                    <div style="text-align: center; padding: var(--spacing-3xl);">
+                        <p>Product not found. <a href="shop.html">Back to shop</a></p>
+                    </div>
+                `;
+                return;
+            }
+
+            const avgRating = reviewsManager.getAverageRating(currentProductId);
+            const reviewCount = reviewsManager.getReviewCount(currentProductId);
+            const inWishlist = wishlistManager.isInWishlist(currentProductId);
+
+            document.getElementById('productDetail').innerHTML = `
+                <div class="product-detail-grid">
+                    <div>
+                        <img src="${product.image}" alt="${product.name}" class="product-image" />
+                    </div>
+                    <div class="product-info">
+                        <h1>${product.name}</h1>
+                        <div class="product-code">Code: ${product.code}</div>
+                        <div class="product-rating">
+                            <div class="rating-container">
+                                <div>${reviewsManager.generateStarRating(avgRating, 'lg')}</div>
+                                <span class="rating-text">${avgRating} (${reviewCount} reviews)</span>
+                            </div>
+                        </div>
+                        <div class="product-price">EGP ${product.price}</div>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-actions">
+                            <button class="btn btn-primary" onclick="buyNow(${product.id}, '${product.name}', '${product.code}')">Buy Now via WhatsApp</button>
+                            <button class="btn btn-secondary" onclick="toggleWishlistProduct(${product.id})">
+                                ${inWishlist ? '♥ In Wishlist' : '♡ Add to Wishlist'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function buyNow(productId, name, code) {
+            const message = encodeURIComponent(`Hello, I want to order: ${name} – Code: ${code}`);
+            window.open(`https://wa.me/201010675436?text=${message}`, '_blank');
+        }
+
+        function toggleWishlistProduct(productId) {
+            const product = PRODUCTS.find(p => p.id === productId);
+            if (product) {
+                if (wishlistManager.isInWishlist(productId)) {
+                    wishlistManager.removeFromWishlist(productId);
+                } else {
+                    wishlistManager.addToWishlist(product);
+                }
+                renderProductDetail();
+            }
+        }
+
+        function renderReviews() {
+            const reviews = reviewsManager.getProductReviews(currentProductId);
+            const container = document.getElementById('reviewsList');
+
+            if (reviews.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--color-gray-medium);">No reviews yet. Be the first to review!</p>';
+                return;
+            }
+
+            container.innerHTML = reviews.map(review => `
+                <div class="review-item">
+                    <div class="review-header">
+                        <div>
+                            <div class="review-customer">${review.customerName}</div>
+                            <div class="review-date">${new Date(review.date).toLocaleDateString()}</div>
+                        </div>
+                    </div>
+                    <div class="review-rating">${reviewsManager.generateStarRating(review.rating, 'md')}</div>
+                    <div class="review-title">${review.title}</div>
+                    <div class="review-comment">${review.comment}</div>
+                    <div class="review-actions">
+                        <button class="review-action-btn" onclick="markHelpful(${review.id})">👍 Helpful</button>
+                        <span class="review-helpful-count">(${review.helpful})</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleReviewForm() {
+            const form = document.getElementById('reviewForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function setRating(rating) {
+            currentRating = rating;
+            document.querySelectorAll('.star-selector').forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('selected');
+                } else {
+                    star.classList.remove('selected');
+                }
+            });
+        }
+
+        function submitReview() {
+            const name = document.getElementById('reviewName').value;
+            const title = document.getElementById('reviewTitle').value;
+            const comment = document.getElementById('reviewComment').value;
+
+            if (!name || !currentRating || !title || !comment) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            reviewsManager.addReview(currentProductId, {
+                customerName: name,
+                rating: currentRating,
+                title,
+                comment
+            });
+
+            // Reset form
+            document.getElementById('reviewForm').style.display = 'none';
+            document.getElementById('reviewName').value = '';
+            document.getElementById('reviewTitle').value = '';
+            document.getElementById('reviewComment').value = '';
+            currentRating = 0;
+            document.querySelectorAll('.star-selector').forEach(s => s.classList.remove('selected'));
+
+            renderReviews();
+            renderProductDetail();
+        }
+
+        function markHelpful(reviewId) {
+            reviewsManager.markHelpful(currentProductId, reviewId);
+            renderReviews();
+        }
+
+        // Initialize
+        renderProductDetail();
+        renderReviews();
+    </script>
+</body>
+</html>

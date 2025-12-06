@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="css/features.css">
 </head>
 <body>
     <!-- Header -->
@@ -22,13 +23,292 @@
             <p style="color: var(--color-gray-dark); font-size: var(--font-size-base); margin-top: var(--spacing-md);">Handmade products with care and creativity</p>
         </section>
 
+        <!-- Search & Filter Section -->
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Search products by name, code, or description..."
+                    aria-label="Search products"
+                >
+            </div>
+        </div>
+
+        <!-- Filters Panel -->
+        <div class="filters-panel">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-xl);">
+                <!-- Category Filter -->
+                <div class="filter-group">
+                    <div class="filter-title">Category</div>
+                    <div class="filter-options" id="categoryFilters"></div>
+                </div>
+
+                <!-- Price Range Filter -->
+                <div class="filter-group">
+                    <div class="filter-title">Price Range</div>
+                    <div class="filter-options">
+                        <input type="range" id="priceMin" min="0" max="5000" value="0" style="width: 100%;">
+                        <input type="range" id="priceMax" min="0" max="5000" value="5000" style="width: 100%;">
+                        <div style="color: var(--color-gray-dark); font-size: var(--font-size-sm); margin-top: var(--spacing-sm);">
+                            <span id="priceDisplay">EGP 0 - EGP 5000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rating Filter -->
+                <div class="filter-group">
+                    <div class="filter-title">Rating</div>
+                    <div class="filter-options">
+                        <label class="filter-checkbox">
+                            <input type="radio" name="rating" value="0" checked> All Ratings
+                        </label>
+                        <label class="filter-checkbox">
+                            <input type="radio" name="rating" value="4"> ★★★★★ 4+
+                        </label>
+                        <label class="filter-checkbox">
+                            <input type="radio" name="rating" value="3"> ★★★★☆ 3+
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Sort Options -->
+                <div class="filter-group">
+                    <div class="filter-title">Sort By</div>
+                    <select id="sortSelect" class="sort-select">
+                        <option value="name">Product Name (A-Z)</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Highest Rated</option>
+                        <option value="newest">Newest First</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="margin-top: var(--spacing-md); display: flex; gap: var(--spacing-md);">
+                <button id="resetFiltersBtn" class="reset-filters-btn">Reset Filters</button>
+                <button id="viewWishlistBtn" class="btn btn-secondary" style="flex: 1;">
+                    ♥ View Wishlist (<span id="wishlistCount">0</span>)
+                </button>
+            </div>
+        </div>
+
         <main>
             <section id="product-list" class="shop-grid"></section>
+            <div id="noResults" class="no-results" style="display: none;">
+                <div class="no-results-icon">🔍</div>
+                <p class="no-results-text">No products found matching your filters.</p>
+                <button class="reset-filters-btn">Try different filters</button>
+            </div>
         </main>
     </div>
 
     <!-- Footer -->
     <footer></footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/components/products.js"></script>
+    <script src="js/components/header.js"></script>
+    <script src="js/components/footer.js"></script>
+    <script src="js/components/search.js"></script>
+    <script src="js/components/reviews.js"></script>
+    <script src="js/components/wishlist.js"></script>
+    <script>
+        // Initialize search and filter functionality
+        let searchFilter = new SearchFilter(PRODUCTS);
+
+        // Initialize event listeners
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchFilter.setSearchTerm(e.target.value);
+            renderFilteredProducts();
+        });
+
+        document.getElementById('sortSelect').addEventListener('change', (e) => {
+            searchFilter.setSortBy(e.target.value);
+            renderFilteredProducts();
+        });
+
+        document.getElementById('priceMin').addEventListener('input', updatePriceDisplay);
+        document.getElementById('priceMax').addEventListener('input', updatePriceDisplay);
+
+        document.querySelectorAll('input[name="rating"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                searchFilter.setMinRating(parseFloat(e.target.value));
+                renderFilteredProducts();
+            });
+        });
+
+        document.getElementById('resetFiltersBtn').addEventListener('click', resetFilters);
+        document.getElementById('viewWishlistBtn').addEventListener('click', viewWishlist);
+
+        // Setup category filters
+        function setupCategoryFilters() {
+            const categories = searchFilter.getCategories();
+            const container = document.getElementById('categoryFilters');
+            
+            container.innerHTML = `
+                <label class="filter-checkbox">
+                    <input type="radio" name="category" value="all" checked> All Categories
+                </label>
+            ` + categories.map(cat => `
+                <label class="filter-checkbox">
+                    <input type="radio" name="category" value="${cat}"> ${cat.charAt(0).toUpperCase() + cat.slice(1)}
+                </label>
+            `).join('');
+
+            document.querySelectorAll('input[name="category"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    searchFilter.setCategory(e.target.value);
+                    renderFilteredProducts();
+                });
+            });
+        }
+
+        function updatePriceDisplay() {
+            const minInput = document.getElementById('priceMin');
+            const maxInput = document.getElementById('priceMax');
+            const min = parseFloat(minInput.value);
+            const max = parseFloat(maxInput.value);
+
+            if (min > max) {
+                minInput.value = max;
+            }
+            if (max < min) {
+                maxInput.value = min;
+            }
+
+            const newMin = parseFloat(minInput.value);
+            const newMax = parseFloat(maxInput.value);
+            document.getElementById('priceDisplay').textContent = `EGP ${newMin} - EGP ${newMax}`;
+            
+            searchFilter.setPriceRange(newMin, newMax);
+            renderFilteredProducts();
+        }
+
+        function renderFilteredProducts() {
+            const filtered = searchFilter.getFiltered();
+            const list = document.getElementById('product-list');
+            const noResults = document.getElementById('noResults');
+
+            if (filtered.length === 0) {
+                list.innerHTML = '';
+                noResults.style.display = 'block';
+                return;
+            }
+
+            noResults.style.display = 'none';
+            list.innerHTML = filtered.map(product => {
+                const rating = product.averageRating || 0;
+                const reviewCount = product.reviewCount || 0;
+                const inWishlist = wishlistManager.isInWishlist(product.id);
+                
+                return `
+                    <div class="card" style="border-radius: 20px; overflow: hidden; position: relative;">
+                        <img src="${product.image}" alt="${product.name}" class="card-image" />
+                        <button class="wishlist-btn ${inWishlist ? 'in-wishlist' : ''}" 
+                                onclick="toggleWishlist(${product.id})" 
+                                style="position: absolute; top: 10px; right: 10px; z-index: 10;">
+                            ${inWishlist ? '♥' : '♡'}
+                        </button>
+                        <div class="card-content">
+                            <h2 class="card-title">${product.name}</h2>
+                            <div class="card-code">${product.code}</div>
+                            <div class="rating-container">
+                                <div>${reviewsManager.generateStarRating(rating, 'sm')}</div>
+                                <span class="rating-text">${rating}</span>
+                                <span class="review-count">(${reviewCount})</span>
+                            </div>
+                            <p class="card-description">${product.description}</p>
+                            <div class="card-footer">
+                                <span class="card-price">EGP ${product.price}</span>
+                                <div class="card-actions">
+                                    <button class="btn btn-primary buy-now" data-name="${product.name}" data-code="${product.code}">Buy Now</button>
+                                    <button class="btn btn-secondary add-to-cart" data-name="${product.name}" data-code="${product.code}">Add to Cart</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Add event listeners to buttons
+            document.querySelectorAll('.buy-now').forEach(btn => {
+                btn.addEventListener('click', handleBuyNow);
+            });
+            document.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', handleAddToCart);
+            });
+        }
+
+        function handleBuyNow(e) {
+            const name = e.target.getAttribute('data-name');
+            const code = e.target.getAttribute('data-code');
+            const message = encodeURIComponent(`Hello, I want to order: ${name} – Code: ${code}`);
+            window.open(`https://wa.me/201010675436?text=${message}`, '_blank');
+        }
+
+        function handleAddToCart(e) {
+            const name = e.target.getAttribute('data-name');
+            const code = e.target.getAttribute('data-code');
+            const product = PRODUCTS.find(p => p.name === name && p.code === code);
+            
+            if (product) {
+                const button = e.target;
+                const originalText = button.textContent;
+                button.textContent = '✓ Added!';
+                button.style.background = 'var(--brand-primary)';
+                
+                setTimeout(() => {
+                    button.textContent = 'Add to Cart';
+                    button.style.background = '';
+                }, 1500);
+            }
+        }
+
+        function toggleWishlist(productId) {
+            const product = PRODUCTS.find(p => p.id === productId);
+            if (product) {
+                if (wishlistManager.isInWishlist(productId)) {
+                    wishlistManager.removeFromWishlist(productId);
+                } else {
+                    wishlistManager.addToWishlist(product);
+                }
+                updateWishlistDisplay();
+                renderFilteredProducts();
+            }
+        }
+
+        function updateWishlistDisplay() {
+            const count = wishlistManager.getWishlistCount();
+            document.getElementById('wishlistCount').textContent = count;
+        }
+
+        function viewWishlist() {
+            alert('Wishlist feature - Coming soon! You have ' + wishlistManager.getWishlistCount() + ' items saved.');
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.querySelector('input[name="category"][value="all"]').checked = true;
+            document.getElementById('priceMin').value = 0;
+            document.getElementById('priceMax').value = 5000;
+            document.querySelector('input[name="rating"][value="0"]').checked = true;
+            document.getElementById('sortSelect').value = 'name';
+            
+            searchFilter.resetFilters();
+            updatePriceDisplay();
+            renderFilteredProducts();
+        }
+
+        // Initialize
+        setupCategoryFilters();
+        updateWishlistDisplay();
+        renderFilteredProducts();
+    </script>
+</body>
+</html>
 
     <script src="js/components/products.js"></script>
     <script src="js/components/header.js"></script>
